@@ -4,15 +4,37 @@
   "logfile": "logs/precipy.log",
   "loglevel": "DEBUG",
   "constants": {
-    "PROJECT_ID": "utrecht-university",
-    "YEAR_RANGE": [1980,2026]
   },
   "ranges": {
   },
   "analytics": [
     [
-      "get_data",
+      "generate_sdg_truth_table",
       {
+      }
+    ],
+    [
+      "filter_data",
+      {
+        "depends": ["generate_sdg_truth_table"]
+      }
+    ],
+    [
+      "group_and_download_data",
+      {
+        "depends": ["filter_data"]
+      }
+    ],
+    [
+      "analyse",
+      {
+        "depends": ["group_and_download_data"]
+      }
+    ],
+    [
+      "radar_plots",
+      {
+        "depends": ["analyse"]
       }
     ]
   ],

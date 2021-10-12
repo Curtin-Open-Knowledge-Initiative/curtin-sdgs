@@ -1,7 +1,12 @@
-# report_templates
+# Curtin Sustainable Development Goals
 
-A template repository for creating a data analysis and reporting pipeline.
+This repository contains code and data analysis for developing a view of Curtin's work and how
+it relates to the sustainable development goals.
 
-To install requirements, type ```pip install -r requirements.txt``` in the pycharm terminal.
+## Outline
 
-If using PycharmProjects, add your google cloud project authentication json file to the parent directory.
+* Run the SDG query against the whole DOI table
+* Create a subset of DOIs (eg for a single university) and collect information for those
+* Process and analyse as required
+
+
