@@ -32,9 +32,15 @@
       }
     ],
     [
-      "radar_plots",
+      "heatmap",
       {
         "depends": ["analyse"]
+      }
+    ],
+    [
+      "boxplots",
+      {
+        "depends": ["group_and_download_data"]
       }
     ]
   ],

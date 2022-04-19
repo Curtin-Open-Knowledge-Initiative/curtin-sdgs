@@ -15,7 +15,7 @@ WITH titleabs AS (
                            ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_5)))
                        ), " "
                )                           as fields
-    FROM `academic-observatory.observatory.doi20210821`
+    FROM `{table}`
 )
 
 SELECT doi,

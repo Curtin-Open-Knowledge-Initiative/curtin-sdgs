@@ -33,7 +33,7 @@ def load_sql_to_string(filepath: Union[str, Path],
     if directory:
         filepath = Path(directory) / filepath
 
-    assert filepath.suffix == '.sql'
+    assert ((filepath.suffix == '.sql') or (filepath.suffix == '.jinja2'))
 
     with open(filepath, 'r') as f:
         sql = f.readlines()
@@ -50,11 +50,4 @@ def load_sql_to_string(filepath: Union[str, Path],
 # Metadata Elements and MAG Added Value to Crossref
 # doi_table_categories_query = load_sql_to_string("doi_table_categories_query.sql",
 # directory=SQL_DIRECTORY)
-sdgs = load_sql_to_string('sdgs.sql',
-                          directory=SQL_DIRECTORY)
 
-filter_query = load_sql_to_string('filter_query.sql',
-                                  directory=SQL_DIRECTORY)
-
-groupby_institution = load_sql_to_string('groupby_institution.sql',
-                                  directory=SQL_DIRECTORY)

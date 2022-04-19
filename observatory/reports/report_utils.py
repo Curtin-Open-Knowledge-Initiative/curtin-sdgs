@@ -23,7 +23,31 @@ import plotly.graph_objects as go
 from pathlib import Path
 from string import Template
 
+from precipy.analytics_function import AnalyticsFunction
+
 import observatory.reports.defaults as defaults
+
+
+def bigquery_rerun(af: Union[AnalyticsFunction, str],
+                   rerun: bool,
+                   verbose: bool,
+                   source: str=None) -> bool:
+    """
+    Convenience function for determining whether to rerun a BQ query
+    """
+
+    if verbose:
+        if type(af) == AnalyticsFunction:
+            fname = af.function_name
+        else:
+            fname = af
+        print(f'Running {fname}' + (f' for source:{source}' if source else '') + '...')
+    if not rerun:
+        if verbose:
+            print(f'...not running query, rerun: {rerun}')
+        return False
+
+    return True
 
 
 def build_html_figure(figure: go.Figure,

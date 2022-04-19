@@ -1,0 +1,26 @@
+WITH temp AS
+    (SELECT
+    identifier
+    , name
+    , published_year
+    , MAX(country) as country
+    , MAX(region) as region
+    , COUNT(DISTINCT doi) as total_outputs
+    , COUNTIF(
+        FALSE {% for sdg in sdgs %} OR {{sdg}} {% endfor %}
+            ) as total_sdgs
+    {% for sdg in sdgs -%}
+    , COUNTIF({{ sdg }}) as {{ sdg }}
+    , COUNTIF({{ sdg }} AND sustainab_title_abs_field) as {{ sdg }}_sustainab
+    {% for sdg_inner in sdgs -%}
+    , COUNTIF({{ sdg }} AND {{ sdg_inner }}) as {{ sdg }}_{{ sdg_inner }}_crosscorr
+    {% endfor %}
+    {% endfor %}
+
+FROM `{{ table }}`
+-- WHERE total_outputs > 999
+
+GROUP BY identifier, name, published_year
+ORDER BY name ASC, published_year DESC)
+
+SELECT * FROM TEMP where total_outputs > 999
