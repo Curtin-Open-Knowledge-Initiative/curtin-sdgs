@@ -3,7 +3,7 @@ from pathlib import Path
 DOI_TABLE = 'academic-observatory.observatory.doi20220326'
 TRUTH_TABLE = 'coki-scratch-space.curtin.doi_sdgs'
 JOIN_TABLE = 'coki-scratch-space.curtin.filtered_doi_sdgs'
-RERUN = True
+RERUN = False
 VERBOSE = True
 
 # Replace with applicable project name

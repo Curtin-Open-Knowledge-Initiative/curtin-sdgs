@@ -19,6 +19,7 @@ import json
 from pathlib import Path
 import os
 
+import numpy as np
 import pandas as pd
 from google.cloud import bigquery
 import jinja2
@@ -36,8 +37,8 @@ from parameters import *
 
 
 def generate_sdg_truth_table(af: AnalyticsFunction,
-                             rerun: bool=RERUN,
-                             verbose: bool=VERBOSE):
+                             rerun: bool = RERUN,
+                             verbose: bool = VERBOSE):
     """
     Create the SDG truth table for the full DOI table and save as new table in BigQuery
     """
@@ -67,8 +68,8 @@ def generate_sdg_truth_table(af: AnalyticsFunction,
 
 
 def filter_data(af: AnalyticsFunction,
-                rerun: bool=RERUN,
-                verbose: bool=VERBOSE):
+                rerun: bool = RERUN,
+                verbose: bool = VERBOSE):
     """
     Filter the truth table for DOIs of interest
     """
@@ -147,24 +148,30 @@ def analyse(af: AnalyticsFunction):
     af.add_existing_file(DATA_FOLDER / 'summary_by_year.csv')
 
 
-def radar_plots(af: AnalyticsFunction):
+def radar_plots(af: AnalyticsFunction,
+                focus_year: int = 2020):
     """
     Construct Radar Plots for Each University
     """
 
     summary = pd.read_csv(DATA_FOLDER / 'summary_by_year.csv')
-    unis = summary.identifier.unique()
-    thetas = [c for c in summary.columns if c.startswith('pc_sdg_')]
+    unis = summary[summary.published_year == focus_year].identifier.unique()
+    thetas = [f'pc_{c}' for c in SDG_LIST]
     for uni in unis:
+        if uni is np.nan:
+            continue
         plot = SingleRadarPlot(df=summary,
                                thetas=thetas,
                                identifier=uni,
-                               focus_year=2020)
+                               focus_year=focus_year)
         fig = plot.plotly()
         name = summary[summary.identifier == uni]['name'].values[0]
         fig.update_layout(title=name)
-        fig.write_image(TEMPDIR / f'{name}.png')
-        fig.write_html(TEMPDIR / f'{name}.html')
+        try:
+            fig.write_image(TEMPDIR / f'{name}.png')
+            fig.write_html(TEMPDIR / f'{name}.html')
+        except FileNotFoundError:
+            pass
 
 
 def heatmap(af: AnalyticsFunction):
@@ -172,8 +179,8 @@ def heatmap(af: AnalyticsFunction):
     Generate a heatmap for Curtin University SDG cross correlation
     """
 
-    data = pd.read_csv(DATA_FOLDER/ 'summary_by_year.csv')
-    curtin = data[data.identifier=='https://ror.org/02n415q13']
+    data = pd.read_csv(DATA_FOLDER / 'summary_by_year.csv')
+    curtin = data[data.identifier == 'https://ror.org/02n415q13']
 
     sdg_cols = [c for c in curtin.columns if c.endswith('_crosscorr')]
     id_cols = ['identifier', 'name', 'published_year']
@@ -187,7 +194,7 @@ def heatmap(af: AnalyticsFunction):
     fig = px.imshow(matrix, color_continuous_scale="PuRd",
                     x=SDG_LIST,
                     y=SDG_LIST)
-    fig.show()
+    # fig.show()
     fig.write_html("cross_correlation.html")
 
 
@@ -220,5 +227,3 @@ def boxplots(af: AnalyticsFunction):
     fig.show()
     fig.write_html('median_by_country.html')
     pass
-
-

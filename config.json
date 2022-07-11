@@ -38,6 +38,12 @@
       }
     ],
     [
+      "radar_plots",
+      {
+        "depends": ["analyse"]
+      }
+    ],
+    [
       "boxplots",
       {
         "depends": ["group_and_download_data"]
