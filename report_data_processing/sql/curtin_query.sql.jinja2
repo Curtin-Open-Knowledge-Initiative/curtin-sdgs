@@ -1,0 +1,30 @@
+WITH
+    curtin AS (
+        SELECT * FROM `{{ table }}`
+        WHERE
+            identifier = "{{ ror }}"
+            AND TRUE in ({% for sdg in sdgs -%}{{ sdg }}, {% endfor %} sustainab_title_abs_field, development_title_abs_field, sdgs_ref_in_title_abs)
+    )--,
+ --   authors AS (
+ --       SELECT
+ --           doi,
+ --           STRING_AGG((SELECT auth.author.display_name), "; ") as authors
+ --       FROM curtin, UNNEST(authorships) as auth, UNNEST(auth.institutions) as inst
+ --       WHERE inst.ror = "https://ror.org/02n415q13"
+ --       GROUP BY doi
+ --   )
+
+SELECT
+    c.doi,
+    published_year,
+    IF(ARRAY_LENGTH(title) > 0, title[OFFSET(0)], null) as title
+    --, auth.authors
+    {% for sdg in sdgs -%}
+    , {{ sdg }} as {{ sdg }}
+    , ({{ sdg }} AND (TRUE IN (sustainab_title_abs_field, development_title_abs_field, sdgs_ref_in_title_abs))) as {{ sdg }}_sustainab
+    {% endfor %}
+    , sustainab_title_abs_field
+    , development_title_abs_field
+    , sdgs_ref_in_title_abs
+FROM curtin as c -- JOIN authors as auth on c.doi=auth.doi
+ORDER BY published_year DESC, title ASC

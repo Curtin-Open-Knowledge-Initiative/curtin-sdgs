@@ -80,6 +80,9 @@ def filter_data(af: AnalyticsFunction,
                                     truth_table=TRUTH_TABLE),
                                directory=SQL_DIRECTORY)
 
+
+    #Redo again
+    #again
     if not report_utils.bigquery_rerun(af, rerun, verbose):
         print(f"""Query is:
 
@@ -110,6 +113,7 @@ def group_and_download_data(af: AnalyticsFunction,
     query_template = load_sql_to_string('groupby_institution.sql.jinja2',
                                         directory=SQL_DIRECTORY)
 
+    # Redo
     data = dict(
         table=JOIN_TABLE,
         sdgs=SDG_LIST
@@ -124,10 +128,48 @@ def group_and_download_data(af: AnalyticsFunction,
     """)
         return
 
+    # Rerun with simplied data
     data = pd.read_gbq(query=query,
                        project_id=PROJECT_ID)
     data.to_csv(DATA_FOLDER / 'institutions.csv')
     af.add_existing_file(DATA_FOLDER / 'institutions.csv')
+
+    if verbose:
+        print('...completed')
+
+
+def curtin_outputs(af: AnalyticsFunction,
+                   rerun: bool = RERUN,
+                   verbose: bool = VERBOSE
+                   ):
+    """
+    Process filtered_doi_sdgs to pull out Curtin outputs and authors
+
+    Includes sustainabl, development, sdgs in title or abstract
+    """
+
+    query_template = load_sql_to_string('curtin_query.sql.jinja2',
+                                        directory=SQL_DIRECTORY)
+    # Try again
+    data = dict(
+        table=JOIN_TABLE,
+        sdgs=SDG_LIST,
+        ror=CURTIN_ROR
+    )
+
+    query = jinja2.Template(query_template).render(data)
+    if not report_utils.bigquery_rerun(af, rerun, verbose):
+        print(f"""Query is:
+
+        {query}
+
+        """)
+        return
+
+    data = pd.read_gbq(query=query,
+                       project_id=PROJECT_ID)
+    data.to_csv(DATA_FOLDER / 'curtin_outputs.csv')
+    af.add_existing_file(DATA_FOLDER / 'curtin_outputs.csv')
 
     if verbose:
         print('...completed')
@@ -154,6 +196,7 @@ def radar_plots(af: AnalyticsFunction,
     Construct Radar Plots for Each University
     """
 
+    print("Running radar plots")
     summary = pd.read_csv(DATA_FOLDER / 'summary_by_year.csv')
     unis = summary[summary.published_year == focus_year].identifier.unique()
     thetas = [f'pc_{c}' for c in SDG_LIST]

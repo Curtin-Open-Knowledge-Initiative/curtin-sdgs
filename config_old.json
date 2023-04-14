@@ -1,0 +1,60 @@
+{
+  "cache_bucket_name": "output_cache",
+  "output_bucket_name": "output_files",
+  "logfile": "logs/precipy.log",
+  "loglevel": "DEBUG",
+  "constants": {
+  },
+  "ranges": {
+  },
+  "analytics": [
+    [
+      "generate_sdg_truth_table",
+      {
+      }
+    ],
+    [
+      "filter_data",
+      {
+        "depends": ["generate_sdg_truth_table"]
+      }
+    ],
+    [
+      "group_and_download_data",
+      {
+        "depends": ["filter_data"]
+      }
+    ],
+    [
+      "analyse",
+      {
+        "depends": ["group_and_download_data"]
+      }
+    ],
+    [
+      "heatmap",
+      {
+        "depends": ["analyse"]
+      }
+    ],
+    [
+      "radar_plots",
+      {
+        "depends": ["analyse"]
+      }
+    ],
+    [
+      "boxplots",
+      {
+        "depends": ["group_and_download_data"]
+      }
+    ]
+  ],
+  "templates": [
+    "report_template.md"
+  ],
+  "filters": [
+    ["markdown", "html"],
+    ["xhtml2pdf", "pdf"]
+  ]
+}

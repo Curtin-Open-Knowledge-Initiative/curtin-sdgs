@@ -1,10 +1,13 @@
 from pathlib import Path
 
-DOI_TABLE = 'academic-observatory.observatory.doi20220326'
+DOI_TABLE = 'academic-observatory.observatory.doi20221210'
 TRUTH_TABLE = 'coki-scratch-space.curtin.doi_sdgs'
 JOIN_TABLE = 'coki-scratch-space.curtin.filtered_doi_sdgs'
-RERUN = False
+RERUN = True
 VERBOSE = True
+
+# Analysis variables
+CURTIN_ROR = 'https://ror.org/02n415q13'
 
 # Replace with applicable project name
 PROJECT_ID = 'coki-scratch-space'

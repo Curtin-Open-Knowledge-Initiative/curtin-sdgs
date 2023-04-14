@@ -1,14 +1,15 @@
 WITH
     target_dois AS (
     SELECT doi as d,
-        affs.identifier,
+        affs.identifier as identifier,
         affs.name,
         affs.country,
         affs.region,
         crossref.published_year,
         crossref.title,
         mag.abstract,
-        unpaywall.is_oa
+        unpaywall.is_oa,
+        openalex.authorships
     FROM
         `{doi_table}`, UNNEST(affiliations.institutions) as affs
     WHERE

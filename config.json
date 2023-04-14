@@ -32,21 +32,15 @@
       }
     ],
     [
-      "heatmap",
+      "curtin_outputs",
       {
-        "depends": ["analyse"]
+        "depends": ["filter_data"]
       }
     ],
     [
       "radar_plots",
       {
         "depends": ["analyse"]
-      }
-    ],
-    [
-      "boxplots",
-      {
-        "depends": ["group_and_download_data"]
       }
     ]
   ],
