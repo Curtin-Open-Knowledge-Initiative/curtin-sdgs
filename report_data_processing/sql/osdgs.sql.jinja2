@@ -1,0 +1,10 @@
+SELECT
+    doi
+{%  for sdg in sdgs %}
+    , CASE
+        WHEN
+            (SELECT COUNT(1) FROM UNNEST(openalex.concepts) as oac WHERE oac.id IN ({{ sdg.oa_concepts }})) > 0 THEN TRUE
+        ELSE FALSE
+        END as {{ sdg.name }}
+{%  endfor %}
+FROM {{ table }}
