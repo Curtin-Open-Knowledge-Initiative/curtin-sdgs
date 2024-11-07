@@ -1,8 +1,8 @@
 from pathlib import Path
 
-DOI_TABLE = 'academic-observatory.observatory.doi20221210'
-TRUTH_TABLE = 'coki-scratch-space.curtin.doi_sdgs'
-JOIN_TABLE = 'coki-scratch-space.curtin.filtered_doi_sdgs'
+DOI_TABLE = 'academic-observatory.observatory.doi20231217'
+TRUTH_TABLE = 'coki-scratch-space.curtin.doi_sdgs_2023'
+JOIN_TABLE = 'coki-scratch-space.curtin.filtered_doi_sdgs_2023'
 RERUN = True
 VERBOSE = True
 

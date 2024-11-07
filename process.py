@@ -191,7 +191,7 @@ def analyse(af: AnalyticsFunction):
 
 
 def radar_plots(af: AnalyticsFunction,
-                focus_year: int = 2020):
+                focus_year: int = 2022):
     """
     Construct Radar Plots for Each University
     """
@@ -211,8 +211,8 @@ def radar_plots(af: AnalyticsFunction,
         name = summary[summary.identifier == uni]['name'].values[0]
         fig.update_layout(title=name)
         try:
-            fig.write_image(TEMPDIR / f'{name}.png')
-            fig.write_html(TEMPDIR / f'{name}.html')
+            fig.write_image(TEMPDIR / f'{name}_{focus_year}.png')
+            fig.write_html(TEMPDIR / f'{name}_{focus_year}.html')
         except FileNotFoundError:
             pass
 

@@ -7,14 +7,14 @@ WITH
         affs.region,
         crossref.published_year,
         crossref.title,
-        mag.abstract,
+        crossref.abstract,
         unpaywall.is_oa,
         openalex.authorships
     FROM
         `{doi_table}`, UNNEST(affiliations.institutions) as affs
     WHERE
-        crossref.published_year > 2014 AND
-        crossref.published_year < 2023
+        crossref.published_year > 2015 AND
+        crossref.published_year < 2024
 )
 
 SELECT

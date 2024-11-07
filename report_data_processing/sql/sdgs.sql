@@ -3,17 +3,8 @@ WITH titleabs AS (
            CONCAT( " ",
                    IF(ARRAY_LENGTH(crossref.title) > 0,
                       LOWER(crossref.title[OFFSET(0)]), "")
-               , " ", LOWER(mag.abstract)) as title_abs,
-           ARRAY_TO_STRING(
-                   ARRAY_CONCAT(
-                           ARRAY(SELECT " "),
-                           ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_0))),
-                           ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_1))),
-                           ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_2))),
-                           ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_3))),
-                           ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_4))),
-                           ARRAY((SELECT LOWER(DisplayName) from UNNEST(mag.fields.level_5)))
-                       ), " "
+               , " ", LOWER(ARRAY_TO_STRING(openalex.abstract_inverted_index.values, " "))) as title_abs,
+           ARRAY_TO_STRING(ARRAY(SELECT LOWER(display_name) FROM UNNEST(openalex.concepts)), " "
                )                           as fields
     FROM `{table}`
 )
